@@ -23,17 +23,24 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^20.3.9",
     "@angular/common": "^20.3.0",
     "@angular/compiler": "^20.3.0",
     "@angular/core": "^20.3.0",
     "@angular/forms": "^20.3.0",
-    "@angular/platform-browser": "^20.3.0",
+    "@angular/platform-browser": "^20.3.9",
     "@angular/platform-server": "^20.3.0",
     "@angular/router": "^20.3.0",
     "@angular/ssr": "^20.3.8",
+    "@tailwindcss/postcss": "^4.1.16",
+    "animations": "^0.0.0",
     "express": "^5.1.0",
+    "ngx-toastr": "^19.1.0",
+    "postcss": "^8.5.6",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "tailwindcss": "^4.1.16",
+    "tslib": "^2.3.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@angular/build": "^20.3.8",
