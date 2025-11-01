@@ -21,6 +21,8 @@ export class Dashboard implements OnInit {
   
   activeTab: string = 'aprendices';
   cargando: boolean = false;
+  buscarCedula: string = '';
+  fichaParaImportar: number = 0;
   
   // Fichas
   fichas: Ficha[] = [];
@@ -92,19 +94,20 @@ cargarFichas() {
  cargarAprendicesPorFicha(idFicha: number) {
   console.log('Cargando aprendices de la ficha:', idFicha);
   this.cargando = true;
-  console.log(idFicha)
+  
   this.aprendizService.getAprendices(idFicha).subscribe({
     next: (aprendices) => {
       this.aprendices = aprendices;
-      this.aprendicesFiltrados = aprendices;
+      this.aprendicesFiltrados = aprendices; 
+      this.buscarCedula = ''; 
       this.cargando = false;
-      this.cdRef.detectChanges(); // Agregar aquí también
+      this.cdRef.detectChanges();
     },
     error: (error) => {
       console.error('Error al cargar aprendices:', error);
       this.showErrorToast('Error al cargar los aprendices');
       this.cargando = false;
-      this.cdRef.detectChanges(); // Y aquí por seguridad
+      this.cdRef.detectChanges();
     }
   });
 }
@@ -238,6 +241,10 @@ editarAprendiz(aprendiz: Aprendiz) {
   });
 }
 
+  limpiarBusqueda() {
+  this.buscarCedula = '';
+  this.filtrarAprendices();
+}
 
   
   cancelarFormularioAprendiz() {
@@ -257,6 +264,7 @@ editarAprendiz(aprendiz: Aprendiz) {
     estadoIngles3: 'PENDIENTE'
     };
   }
+
   
   filtrarAprendices() {
     if (this.fichaSeleccionada === 0) {
@@ -268,7 +276,27 @@ editarAprendiz(aprendiz: Aprendiz) {
       );
     }
   }
-  
+
+onFichaChange() {
+  if (this.fichaSeleccionada && this.fichaSeleccionada !== 0) {
+    this.cargarAprendicesPorFicha(this.fichaSeleccionada);
+  } else {
+    this.aprendicesFiltrados = [...this.aprendices];
+  }
+}
+
+buscarPorCedula() {
+  if (this.buscarCedula && this.buscarCedula.trim() !== '') {
+    // Buscar en los aprendices actualmente mostrados
+    this.aprendicesFiltrados = this.aprendices.filter(aprendiz => 
+      aprendiz.numeroDocumento.toString().includes(this.buscarCedula.trim())
+    );
+  } else {
+    // Si no hay búsqueda, mostrar todos los de la ficha actual
+    this.aprendicesFiltrados = [...this.aprendices];
+  }
+}
+
   // ==================== MÉTODOS PARA IMPORTAR EXCEL ====================
   
   abrirImportarExcel() {
@@ -317,7 +345,7 @@ editarAprendiz(aprendiz: Aprendiz) {
     this.importando = true;
     this.mensajeImportacion = null;
     
-    this.aprendizService.importarExcel(this.archivoSeleccionado).subscribe({
+    this.aprendizService.importarExcel(this.archivoSeleccionado, this.fichaSeleccionada).subscribe({
       next: (response: { mensaje: any; cantidad: any; }) => {
         this.mensajeImportacion = {
           tipo: 'success',

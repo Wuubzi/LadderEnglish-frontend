@@ -6,7 +6,7 @@
         <div class="flex items-center space-x-4">
           <div class="bg-green-600 rounded-lg w-10 h-10 flex items-center justify-center">
             <figure>
-                <img src="/public/sena.png" alt="">
+              <img src="/public/sena.png" alt="">
             </figure>
           </div>
           <div>
@@ -22,19 +22,13 @@
     <!-- Tabs Navigation -->
     <div class="bg-white rounded-lg shadow-sm mb-6">
       <nav class="flex border-b border-gray-200">
-        <button 
-          (click)="activeTab = 'aprendices'"
-          [class.border-green-600]="activeTab === 'aprendices'"
-          [class.text-green-600]="activeTab === 'aprendices'"
-          [class.text-gray-600]="activeTab !== 'aprendices'"
+        <button (click)="activeTab = 'aprendices'" [class.border-green-600]="activeTab === 'aprendices'"
+          [class.text-green-600]="activeTab === 'aprendices'" [class.text-gray-600]="activeTab !== 'aprendices'"
           class="px-6 py-4 font-medium border-b-2 transition-colors hover:text-green-600 cursor-pointer">
           Aprendices
         </button>
-        <button 
-          (click)="activeTab = 'fichas'"
-          [class.border-green-600]="activeTab === 'fichas'"
-          [class.text-green-600]="activeTab === 'fichas'"
-          [class.text-gray-600]="activeTab !== 'fichas'"
+        <button (click)="activeTab = 'fichas'" [class.border-green-600]="activeTab === 'fichas'"
+          [class.text-green-600]="activeTab === 'fichas'" [class.text-gray-600]="activeTab !== 'fichas'"
           class="px-6 py-4 font-medium border-b-2 transition-colors hover:text-green-600 cursor-pointer">
           Fichas
         </button>
@@ -46,22 +40,38 @@
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-900">Gestión de Aprendices</h2>
         <div class="flex space-x-3">
-          <button 
-            (click)="abrirImportarExcel()"
+          <button (click)="abrirImportarExcel()"
             class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 cursor-pointer">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
             </svg>
             <span>Importar Excel</span>
           </button>
-          <button 
-            (click)="mostrarFormularioAprendiz = true"
+          <button (click)="mostrarFormularioAprendiz = true"
             class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 cursor-pointer">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
             <span>Agregar Aprendiz</span>
           </button>
+        </div>
+      </div>
+
+      <!-- Búsqueda por Cédula -->
+      <div class="mb-5">
+        <label for="buscarCedula" class="block text-sm font-medium text-gray-700 mb-2">
+          Buscar por Número de Documento
+        </label>
+        <div class="relative">
+          <input id="buscarCedula" type="text" [(ngModel)]="buscarCedula" (input)="buscarPorCedula()"
+            placeholder="Ingrese número de documento..."
+            class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none">
+          <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </div>
       </div>
 
@@ -70,10 +80,7 @@
         <label for="filtroFicha" class="block text-sm font-medium text-gray-700 mb-2">
           Filtrar por Ficha
         </label>
-        <select 
-          id="filtroFicha"
-          [(ngModel)]="fichaSeleccionada"
-          (ngModelChange)="filtrarAprendices()"
+        <select id="filtroFicha" [(ngModel)]="fichaSeleccionada" (ngModelChange)="filtrarAprendices()"
           (ngChange)="filtrarAprendices()"
           class="w-full max-w-md px-4 py-2 border cursor-pointer border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none">
           <option value="">Todas las fichas</option>
@@ -89,13 +96,15 @@
           <thead class="bg-gray-50">
             <tr>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">ID</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Tipo Documento</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Numero Documento</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Tipo Documento
+              </th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Numero
+                Documento</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Nombre</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Apellidos</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Celular</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Correo</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Estado</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Estado</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Inglés 1</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Inglés 2</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Inglés 3</th>
@@ -113,27 +122,30 @@
               <td class="px-4 py-4 text-sm text-gray-600">{{ aprendiz.correo }}</td>
               <td class="px-4 py-4 text-sm text-gray-600">{{ aprendiz.estado }}</td>
               <td class="px-4 py-4">
-                <span [ngClass]="getEstadoClass(aprendiz.estadoIngles1)" class="px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap">
+                <span [ngClass]="getEstadoClass(aprendiz.estadoIngles1)"
+                  class="px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap">
                   {{ aprendiz.estadoIngles1 }}
                 </span>
               </td>
               <td class="px-4 py-4">
-                <span [ngClass]="getEstadoClass(aprendiz.estadoIngles2)" class="px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap">
+                <span [ngClass]="getEstadoClass(aprendiz.estadoIngles2)"
+                  class="px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap">
                   {{ aprendiz.estadoIngles2 }}
                 </span>
               </td>
               <td class="px-4 py-4">
-                <span [ngClass]="getEstadoClass(aprendiz.estadoIngles3)" class="px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap">
+                <span [ngClass]="getEstadoClass(aprendiz.estadoIngles3)"
+                  class="px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap">
                   {{ aprendiz.estadoIngles3 }}
                 </span>
               </td>
               <td class="px-4 py-4 text-sm">
                 <div class="flex space-x-2">
-                  <button 
-                    (click)="editarAprendiz(aprendiz)"
+                  <button (click)="editarAprendiz(aprendiz)"
                     class="text-blue-600 hover:text-blue-800 transition-colors cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                   </button>
                 </div>
@@ -153,11 +165,10 @@
     <div *ngIf="activeTab === 'fichas'" class="bg-white rounded-lg shadow-sm p-6">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-900">Gestión de Fichas</h2>
-        <button 
-          (click)="mostrarFormularioFicha = true"
+        <button (click)="mostrarFormularioFicha = true"
           class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
           <span>Crear Ficha</span>
         </button>
@@ -171,33 +182,22 @@
         <form (ngSubmit)="guardarFicha()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Número de Ficha</label>
-            <input 
-              type="text"
-              [(ngModel)]="fichaFormulario.numeroFicha"
-              name="numeroFicha"
-              required
+            <input type="text" [(ngModel)]="fichaFormulario.numeroFicha" name="numeroFicha" required
               placeholder="Ej: 2558888"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none">
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de Ficha</label>
-            <input 
-              type="text"
-              [(ngModel)]="fichaFormulario.nombreFicha"
-              name="nombreFicha"
-              required
+            <input type="text" [(ngModel)]="fichaFormulario.nombreFicha" name="nombreFicha" required
               placeholder="Ej: Análisis y Desarrollo de Software"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none">
           </div>
           <div class="md:col-span-2 flex justify-end space-x-3">
-            <button 
-              type="button"
-              (click)="cancelarFormularioFicha()"
+            <button type="button" (click)="cancelarFormularioFicha()"
               class="px-4 py-2 border cursor-pointer border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
               Cancelar
             </button>
-            <button 
-              type="submit"
+            <button type="submit"
               class="px-4 py-2 cursor-pointer bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
               {{ fichaEditando ? 'Actualizar' : 'Guardar' }}
             </button>
@@ -211,8 +211,10 @@
           <thead class="bg-gray-50">
             <tr>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">ID</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Número de Ficha</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Nombre de Ficha</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Número de Ficha
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Nombre de Ficha
+              </th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
             </tr>
           </thead>
@@ -223,11 +225,11 @@
               <td class="px-6 py-4 text-sm text-gray-900">{{ ficha.nombreFicha }}</td>
               <td class="px-6 py-4 text-sm">
                 <div class="flex space-x-2">
-                  <button 
-                    (click)="editarFicha(ficha)"
+                  <button (click)="editarFicha(ficha)"
                     class="text-blue-600 hover:text-blue-800 transition-colors cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                   </button>
                 </div>
@@ -244,7 +246,8 @@
     </div>
 
     <!-- Modal para Agregar/Editar Aprendiz -->
-    <div *ngIf="mostrarFormularioAprendiz" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div *ngIf="mostrarFormularioAprendiz"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         <div class="p-6">
           <h3 class="text-xl font-bold text-gray-900 mb-6">
@@ -253,10 +256,7 @@
           <form (ngSubmit)="guardarAprendiz()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Tipo Documento</label>
-              <select 
-                [(ngModel)]="aprendizFormulario.tipoDocumento"
-                name="tipoDocumento"
-                required
+              <select [(ngModel)]="aprendizFormulario.tipoDocumento" name="tipoDocumento" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                 <option value="">Seleccione una Documento</option>
                 <option value="CC">Cédula de Ciudadanía</option>
@@ -266,19 +266,12 @@
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Numero Documento</label>
-              <input 
-                type="text"
-                [(ngModel)]="aprendizFormulario.numeroDocumento"
-                name="cedula"
-                required
+              <input type="text" [(ngModel)]="aprendizFormulario.numeroDocumento" name="cedula" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Ficha</label>
-              <select 
-                [(ngModel)]="aprendizFormulario.idFicha"
-                name="fichaId"
-                required
+              <select [(ngModel)]="aprendizFormulario.idFicha" name="fichaId" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                 <option value="">Seleccione una ficha</option>
                 <option *ngFor="let ficha of fichas" [value]="ficha.idFicha">
@@ -288,46 +281,27 @@
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
-              <input 
-                type="text"
-                [(ngModel)]="aprendizFormulario.nombres"
-                name="nombre"
-                required
+              <input type="text" [(ngModel)]="aprendizFormulario.nombres" name="nombre" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Apellidos</label>
-              <input 
-                type="text"
-                [(ngModel)]="aprendizFormulario.apellidos"
-                name="apellidos"
-                required
+              <input type="text" [(ngModel)]="aprendizFormulario.apellidos" name="apellidos" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Celular</label>
-              <input 
-                type="text"
-                [(ngModel)]="aprendizFormulario.celular"
-                name="celular"
-                required
+              <input type="text" [(ngModel)]="aprendizFormulario.celular" name="celular" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Correo</label>
-              <input 
-                type="email"
-                [(ngModel)]="aprendizFormulario.correo"
-                name="correo"
-                required
+              <input type="email" [(ngModel)]="aprendizFormulario.correo" name="correo" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Estado Aprendiz</label>
-              <select 
-                [(ngModel)]="aprendizFormulario.estado"
-                name="estado"
-                required
+              <select [(ngModel)]="aprendizFormulario.estado" name="estado" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                 <option value="">Seleccione un estado</option>
                 <option value="EN FORMACION">EN FORMACION</option>
@@ -336,12 +310,10 @@
                 <option value="APLAZADO">APLAZADO</option>
               </select>
             </div>
-            
+
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Estado Inglés 1</label>
-              <select 
-                [(ngModel)]="aprendizFormulario.estadoIngles1"
-                name="estado_ingles1"
+              <select [(ngModel)]="aprendizFormulario.estadoIngles1" name="estado_ingles1"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                 <option value="CANCELADO">CANCELADO</option>
                 <option value="INSCRITO">INSCRITO</option>
@@ -353,9 +325,7 @@
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Estado Inglés 2</label>
-              <select 
-                [(ngModel)]="aprendizFormulario.estadoIngles2"
-                name="estado_ingles2"
+              <select [(ngModel)]="aprendizFormulario.estadoIngles2" name="estado_ingles2"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                 <option value="CANCELADO">CANCELADO</option>
                 <option value="INSCRITO">INSCRITO</option>
@@ -367,9 +337,7 @@
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-700 mb-2">Estado Inglés 3</label>
-              <select 
-                [(ngModel)]="aprendizFormulario.estadoIngles3"
-                name="estado_ingles3"
+              <select [(ngModel)]="aprendizFormulario.estadoIngles3" name="estado_ingles3"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                 <option value="CANCELADO">CANCELADO</option>
                 <option value="INSCRITO">INSCRITO</option>
@@ -380,14 +348,11 @@
               </select>
             </div>
             <div class="md:col-span-2 flex justify-end space-x-3 mt-4">
-              <button 
-                type="button"
-                (click)="cancelarFormularioAprendiz()"
+              <button type="button" (click)="cancelarFormularioAprendiz()"
                 class="px-6 py-2 border cursor-pointer border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
                 Cancelar
               </button>
-              <button 
-                type="submit"
+              <button type="submit"
                 class="px-6 py-2 cursor-pointer bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
                 {{ aprendizEditando ? 'Actualizar' : 'Guardar' }}
               </button>
@@ -398,70 +363,84 @@
     </div>
 
     <!-- Modal para Importar Excel -->
-    <div *ngIf="mostrarModalImportar" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <!-- Modal para Importar Excel -->
+    <div *ngIf="mostrarModalImportar"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full">
         <div class="p-6">
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-xl font-bold text-gray-900">Importar Aprendices desde Excel</h3>
-            <button 
-              (click)="cerrarModalImportar()"
-              class="text-gray-400 hover:text-gray-600 transition-colors">
+            <button (click)="cerrarModalImportar()" class="text-gray-400 hover:text-gray-600 transition-colors">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
+          </div>
+
+          <!-- Selector de Ficha -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Seleccionar Ficha *</label>
+            <select [(ngModel)]="fichaParaImportar"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none cursor-pointer">
+              <option value="0">Seleccione la ficha destino</option>
+              <option *ngFor="let ficha of fichas" [value]="ficha.idFicha">
+                {{ ficha.numeroFicha }} - {{ ficha.nombreFicha }}
+              </option>
+            </select>
+            <p class="text-xs text-gray-500 mt-1">Los aprendices importados se asignarán a esta ficha</p>
           </div>
 
           <!-- Información del formato -->
           <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <div class="flex">
               <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clip-rule="evenodd" />
               </svg>
               <div>
                 <h4 class="text-sm font-semibold text-blue-900 mb-2">Formato del archivo Excel</h4>
                 <p class="text-sm text-blue-800 mb-2">El archivo debe contener las siguientes columnas:</p>
                 <div class="text-xs text-blue-700 font-mono bg-blue-100 p-2 rounded">
-                  cedula | nombre | apellidos | celular | correo | fichaId | estado_ingles1 | estado_ingles2 | estado_ingles3
+                  tipoDocumento | numeroDocumento | nombres | apellidos | celular | correo | estado | estadoIngles1 |
+                  estadoIngles2 | estadoIngles3
                 </div>
                 <p class="text-sm text-blue-800 mt-2">
-                  <strong>Nota:</strong> Los estados deben ser: CANCELADO, INSCRITO, FORMACION, CERTIFICADO, PENDIENTE o PREINSCRITO
+                  <strong>Nota:</strong> Los estados deben ser: CANCELADO, INSCRITO, FORMACION, CERTIFICADO, PENDIENTE o
+                  PREINSCRITO
                 </p>
               </div>
             </div>
           </div>
 
-    
           <!-- Zona de carga de archivo -->
           <div class="mb-6">
             <label class="block text-sm font-medium text-gray-700 mb-2">Seleccionar archivo Excel</label>
             <div class="flex items-center justify-center w-full">
-              <label class="w-full flex flex-col items-center px-4 py-6 bg-white rounded-lg border-2 border-dashed border-gray-300 cursor-pointer hover:border-green-500 transition-colors">
+              <label
+                class="w-full flex flex-col items-center px-4 py-6 bg-white rounded-lg border-2 border-dashed border-gray-300 cursor-pointer hover:border-green-500 transition-colors">
                 <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
                 <span class="text-sm text-gray-600">
                   <span class="font-semibold text-green-600">Haz clic para cargar</span> o arrastra el archivo aquí
                 </span>
                 <span class="text-xs text-gray-500 mt-1">Excel (.xlsx, .xls)</span>
-                <input 
-                  type="file" 
-                  class="hidden" 
-                  accept=".xlsx,.xls"
-                  (change)="onFileSelected($event)"
-                  #fileInput>
+                <input type="file" class="hidden" accept=".xlsx,.xls" (change)="onFileSelected($event)" #fileInput>
               </label>
             </div>
-            <div *ngIf="archivoSeleccionado" class="mt-3 flex items-center text-sm text-gray-700 bg-green-50 p-3 rounded-lg">
+            <div *ngIf="archivoSeleccionado"
+              class="mt-3 flex items-center text-sm text-gray-700 bg-green-50 p-3 rounded-lg">
               <svg class="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd" />
               </svg>
               <span class="font-medium">{{ archivoSeleccionado.name }}</span>
-              <button 
-                (click)="eliminarArchivo()"
-                class="ml-auto text-red-600 hover:text-red-800">
+              <button (click)="eliminarArchivo()" class="ml-auto text-red-600 hover:text-red-800">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
@@ -469,35 +448,33 @@
 
           <!-- Mensaje de estado -->
           <div *ngIf="mensajeImportacion" class="mb-6 p-4 rounded-lg" [ngClass]="{
-            'bg-green-50 border border-green-200': mensajeImportacion.tipo === 'success',
-            'bg-red-50 border border-red-200': mensajeImportacion.tipo === 'error',
-            'bg-yellow-50 border border-yellow-200': mensajeImportacion.tipo === 'warning'
-          }">
+        'bg-green-50 border border-green-200': mensajeImportacion.tipo === 'success',
+        'bg-red-50 border border-red-200': mensajeImportacion.tipo === 'error',
+        'bg-yellow-50 border border-yellow-200': mensajeImportacion.tipo === 'warning'
+      }">
             <p class="text-sm" [ngClass]="{
-              'text-green-800': mensajeImportacion.tipo === 'success',
-              'text-red-800': mensajeImportacion.tipo === 'error',
-              'text-yellow-800': mensajeImportacion.tipo === 'warning'
-            }">
+          'text-green-800': mensajeImportacion.tipo === 'success',
+          'text-red-800': mensajeImportacion.tipo === 'error',
+          'text-yellow-800': mensajeImportacion.tipo === 'warning'
+        }">
               {{ mensajeImportacion.texto }}
             </p>
           </div>
 
           <!-- Botones de acción -->
           <div class="flex justify-end space-x-3">
-            <button 
-              type="button"
-              (click)="cerrarModalImportar()"
+            <button type="button" (click)="cerrarModalImportar()"
               class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
               Cancelar
             </button>
-            <button 
-              type="button"
-              (click)="importarExcel()"
-              [disabled]="!archivoSeleccionado || importando"
+            <button type="button" (click)="importarExcel()"
+              [disabled]="!archivoSeleccionado || !fichaParaImportar || fichaParaImportar === 0 || importando"
               class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center space-x-2">
               <svg *ngIf="importando" class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
               </svg>
               <span>{{ importando ? 'Importando...' : 'Importar Aprendices' }}</span>
             </button>
@@ -505,5 +482,6 @@
         </div>
       </div>
     </div>
+
   </div>
-</div>  
+</div>

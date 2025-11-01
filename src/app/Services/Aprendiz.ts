@@ -52,9 +52,10 @@ export class AprendizService {
   }
 
   // Importar Excel
-  importarExcel(file: File): Observable<any> {
+  importarExcel(file: File, id: number): Observable<any> {
+    const params = new HttpParams().set('idFicha', id.toString());
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<any>(`${this.apiUrl}/aprendices/importar-excel`, formData);
+    return this.http.post<any>(`${this.apiUrl}/cargarAprendices`, formData, {params });
   }
 }
