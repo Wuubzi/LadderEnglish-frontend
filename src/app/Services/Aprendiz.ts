@@ -15,6 +15,7 @@ export interface Aprendiz {
   estadoIngles1: string;
   estadoIngles2: string;
   estadoIngles3: string;
+  observacion: string;
   idFicha: number;
   ficha?: {
     idFicha: number;
@@ -25,7 +26,7 @@ export interface Aprendiz {
 
 @Injectable({ providedIn: 'root' })
 export class AprendizService {
-  private apiUrl = 'http://localhost:8080/api/v1/aprendiz';
+  private apiUrl = 'https://ladderenglish-backend.onrender.com/api/v1/aprendiz';
   private http = inject(HttpClient);
 
   // ==================== APRENDICES ====================
@@ -49,6 +50,11 @@ export class AprendizService {
   actualizarAprendiz(id: number, aprendiz: Partial<Aprendiz>): Observable<Aprendiz> {
     const params = new HttpParams().set('idAprendiz', id.toString());
     return this.http.put<Aprendiz>(`${this.apiUrl}/editarAprendiz`, aprendiz, { params });
+  }
+
+  exportarAprendiz(idFicha: number): Observable<Blob> {
+    const params = new HttpParams().set('idFicha', idFicha.toString());
+    return this.http.get(`${this.apiUrl}/exportarAprendices`, { params, responseType: 'blob' });
   }
 
   // Importar Excel

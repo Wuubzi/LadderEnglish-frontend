@@ -6,10 +6,11 @@ import { Observable } from "rxjs";
   idFicha: number;
   numeroFicha: string;
   nombreFicha: string;
+  estado: string;
 }
 @Injectable({ providedIn: 'root' })
 export class FichasService { 
-    private apiUrl = 'http://localhost:8080/api/v1/fichas';
+    private apiUrl = 'https://ladderenglish-backend.onrender.com/api/v1/fichas';
   private http = inject(HttpClient);
 
   
@@ -18,6 +19,10 @@ export class FichasService {
   // Obtener todas las fichas
   getFichas(): Observable<Ficha[]> {
     return this.http.get<Ficha[]>(`${this.apiUrl}/obtenerFichas`);
+  }
+
+  getFichaByEstado(): Observable<Ficha[]> {
+    return this.http.get<Ficha[]>(`${this.apiUrl}/obtenerFichasActivas`);
   }
 
   // Crear ficha

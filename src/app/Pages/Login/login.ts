@@ -27,7 +27,6 @@ export class Login {
   onSubmit() {
     if (this.loginForm.valid) {
       const formData = this.loginForm.value;
-      console.log(formData);
       const loginData = {
         tipo_documento: formData.tipoDocumento || '',
         numero_documento: formData.numeroDocumento || '',
@@ -38,10 +37,12 @@ export class Login {
           this.loginForm.reset();
           this.showToast();
           this.locaStorage.setItem('access_token', response.token);
+          this.locaStorage.setItem('rol', response.rol);
           this.router.navigate(['/']);
         },
-        error: (error: { message: any; }) => {
-          this.showErrorToast(error.message || 'Login failed');
+        error: (error: any) => {
+          console.log(error);
+          this.showErrorToast('Login failed');
         }
       });
     }

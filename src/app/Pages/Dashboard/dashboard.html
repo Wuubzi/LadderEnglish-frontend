@@ -6,12 +6,24 @@
         <div class="flex items-center space-x-4">
           <div class="bg-green-600 rounded-lg w-10 h-10 flex items-center justify-center">
             <figure>
-              <img src="/public/sena.png" alt="">
+              <img src="/sena.png" alt="">
             </figure>
           </div>
           <div>
             <h1 class="text-xl font-bold text-gray-900">SENA - LeadderEnglish</h1>
           </div>
+        </div>
+        
+        <!-- Sección de usuario y cerrar sesión -->
+        <div class="flex items-center space-x-4">
+          <button (click)="cerrarSesion()" 
+            class="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span class="hidden sm:inline">Cerrar Sesión</span>
+          </button>
         </div>
       </div>
     </div>
@@ -22,12 +34,13 @@
     <!-- Tabs Navigation -->
     <div class="bg-white rounded-lg shadow-sm mb-6">
       <nav class="flex border-b border-gray-200">
-        <button (click)="activeTab = 'aprendices'" [class.border-green-600]="activeTab === 'aprendices'"
+        <button (click)="cambiarTab('aprendices')" [class.border-green-600]="activeTab === 'aprendices'"
           [class.text-green-600]="activeTab === 'aprendices'" [class.text-gray-600]="activeTab !== 'aprendices'"
           class="px-6 py-4 font-medium border-b-2 transition-colors hover:text-green-600 cursor-pointer">
           Aprendices
         </button>
-        <button (click)="activeTab = 'fichas'" [class.border-green-600]="activeTab === 'fichas'"
+        <!-- Tab de Fichas solo visible para INSTRUCTOR -->
+        <button *ngIf="esInstructor()" (click)="cambiarTab('fichas')" [class.border-green-600]="activeTab === 'fichas'"
           [class.text-green-600]="activeTab === 'fichas'" [class.text-gray-600]="activeTab !== 'fichas'"
           class="px-6 py-4 font-medium border-b-2 transition-colors hover:text-green-600 cursor-pointer">
           Fichas
@@ -40,7 +53,18 @@
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-900">Gestión de Aprendices</h2>
         <div class="flex space-x-3">
-          <button (click)="abrirImportarExcel()"
+          <!-- Botón Exportar - Solo COORDINADOR -->
+          <button *ngIf="esCoordinador()" (click)="exportarAprendicesExcel()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Exportar Excel</span>
+          </button>
+          
+          <!-- Botones Importar y Agregar - Solo INSTRUCTOR -->
+          <button *ngIf="esInstructor()" (click)="abrirImportarExcel()"
             class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 cursor-pointer">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -48,7 +72,7 @@
             </svg>
             <span>Importar Excel</span>
           </button>
-          <button (click)="mostrarFormularioAprendiz = true"
+          <button *ngIf="esInstructor()" (click)="mostrarFormularioAprendiz = true"
             class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 cursor-pointer">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -84,7 +108,7 @@
           (ngChange)="filtrarAprendices()"
           class="w-full max-w-md px-4 py-2 border cursor-pointer border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none">
           <option value="">Todas las fichas</option>
-          <option *ngFor="let ficha of fichas" [value]="ficha.idFicha">
+          <option *ngFor="let ficha of  fichasActivas" [value]="ficha.idFicha">
             {{ ficha.numeroFicha }} - {{ ficha.nombreFicha }}
           </option>
         </select>
@@ -96,10 +120,8 @@
           <thead class="bg-gray-50">
             <tr>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">ID</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Tipo Documento
-              </th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Numero
-                Documento</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Tipo Documento</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Numero Documento</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Nombre</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Apellidos</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Celular</th>
@@ -108,11 +130,13 @@
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Inglés 1</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Inglés 2</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Inglés 3</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Observacion</th>
+              <!-- Columna de Acciones solo para INSTRUCTOR -->
+              <th *ngIf="esInstructor()" class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr *ngFor="let aprendiz of aprendicesFiltrados" class="hover:bg-gray-50 transition-colors">
+            <tr *ngFor="let aprendiz of aprendicesPaginados" class="hover:bg-gray-50 transition-colors">
               <td class="px-4 py-4 text-sm text-gray-900">{{ aprendiz.idAprendiz }}</td>
               <td class="px-4 py-4 text-sm text-gray-900">{{ aprendiz.tipoDocumento }}</td>
               <td class="px-4 py-4 text-sm text-gray-900">{{ aprendiz.numeroDocumento }}</td>
@@ -139,7 +163,9 @@
                   {{ aprendiz.estadoIngles3 }}
                 </span>
               </td>
-              <td class="px-4 py-4 text-sm">
+                <td class="px-4 py-4 text-sm text-gray-600">{{ aprendiz.observacion }}</td>
+              <!-- Acciones solo para INSTRUCTOR -->
+              <td *ngIf="esInstructor()" class="px-4 py-4 text-sm">
                 <div class="flex space-x-2">
                   <button (click)="editarAprendiz(aprendiz)"
                     class="text-blue-600 hover:text-blue-800 transition-colors cursor-pointer">
@@ -152,26 +178,102 @@
               </td>
             </tr>
             <tr *ngIf="aprendicesFiltrados.length === 0">
-              <td colspan="10" class="px-4 py-8 text-center text-gray-500">
+              <td [attr.colspan]="esInstructor() ? 12 : 11" class="px-4 py-8 text-center text-gray-500">
                 No hay aprendices registrados
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+
+      <!-- Controles de Paginación -->
+<div class="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
+
+  <!-- Información de registros -->
+  <div class="text-sm text-gray-700">
+    Mostrando 
+    <span class="font-medium">{{ (paginaActual - 1) * itemsPorPagina + 1 }}</span>
+    a 
+    <span class="font-medium">{{ (paginaActual * itemsPorPagina) < aprendicesFiltrados.length ? (paginaActual * itemsPorPagina) : aprendicesFiltrados.length }}</span>
+    de 
+    <span class="font-medium">{{ aprendicesFiltrados.length }}</span>
+    registros
+  </div>
+
+  <!-- Botones de paginación -->
+  <div class="flex items-center space-x-2">
+    <!-- Botón Primera página -->
+    <button (click)="cambiarPagina(1)" [disabled]="paginaActual === 1"
+      class="px-3 py-1 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Botón Anterior -->
+    <button (click)="cambiarPagina(paginaActual - 1)" [disabled]="paginaActual === 1"
+      class="px-3 py-1 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      Anterior
+    </button>
+
+    <!-- Números de página -->
+    <button *ngFor="let pagina of obtenerRangoPaginas()" (click)="cambiarPagina(pagina)"
+      [class.bg-green-600]="pagina === paginaActual" [class.text-white]="pagina === paginaActual"
+      [class.hover:bg-green-700]="pagina === paginaActual"
+      class="px-3 py-1 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition-colors">
+      {{ pagina }}
+    </button>
+
+    <!-- Botón Siguiente -->
+    <button (click)="cambiarPagina(paginaActual + 1)" [disabled]="paginaActual === totalPaginas"
+      class="px-3 py-1 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      Siguiente
+    </button>
+
+    <!-- Botón Última página -->
+    <button (click)="cambiarPagina(totalPaginas)" [disabled]="paginaActual === totalPaginas"
+      class="px-3 py-1 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+</div>
     </div>
 
-    <!-- Tab: Fichas -->
-    <div *ngIf="activeTab === 'fichas'" class="bg-white rounded-lg shadow-sm p-6">
+    <!-- Tab: Fichas - Solo INSTRUCTOR -->
+    <div *ngIf="activeTab === 'fichas' && esInstructor()" class="bg-white rounded-lg shadow-sm p-6">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-900">Gestión de Fichas</h2>
         <button (click)="mostrarFormularioFicha = true"
-          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
+          class="bg-green-600 cursor-pointer hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
           <span>Crear Ficha</span>
         </button>
+      </div>
+
+       <div class="mb-6">
+        <label for="buscarFicha" class="block text-sm font-medium text-gray-700 mb-2">
+          Buscar Ficha por Número o Nombre
+        </label>
+        <div class="relative">
+          <input id="buscarFicha" type="text" [(ngModel)]="buscarFicha" (input)="buscarPorFicha()"
+            placeholder="Ingrese número de ficha o nombre de programa..."
+            class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none">
+          <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <button *ngIf="buscarFicha" (click)="limpiarBusquedaFicha()"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <!-- Formulario de Ficha -->
@@ -190,6 +292,12 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de Ficha</label>
             <input type="text" [(ngModel)]="fichaFormulario.nombreFicha" name="nombreFicha" required
               placeholder="Ej: Análisis y Desarrollo de Software"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none">
+          </div>
+            <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Estado Ficha</label>
+            <input type="text" [(ngModel)]="fichaFormulario.estado" name="nombreFicha" required
+              placeholder="Ej: Activo/Inactivo"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none">
           </div>
           <div class="md:col-span-2 flex justify-end space-x-3">
@@ -211,18 +319,23 @@
           <thead class="bg-gray-50">
             <tr>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">ID</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Número de Ficha
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Nombre de Ficha
-              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Número de Ficha</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Nombre de Ficha</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Estado de Ficha</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr *ngFor="let ficha of fichas" class="hover:bg-gray-50 transition-colors">
+            <tr *ngFor="let ficha of fichasFiltradas" class="hover:bg-gray-50 transition-colors">
               <td class="px-6 py-4 text-sm text-gray-900">{{ ficha.idFicha }}</td>
               <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ ficha.numeroFicha }}</td>
               <td class="px-6 py-4 text-sm text-gray-900">{{ ficha.nombreFicha }}</td>
+                <td class="px-6 py-4">
+                <span [ngClass]=" getEstadoFicha(ficha.estado)"
+                  class="px-3 py-1 text-xd font-semibold rounded-full whitespace-nowrap">
+                  {{ ficha.estado }}
+                </span>
+              </td>
               <td class="px-6 py-4 text-sm">
                 <div class="flex space-x-2">
                   <button (click)="editarFicha(ficha)"
@@ -235,7 +348,7 @@
                 </div>
               </td>
             </tr>
-            <tr *ngIf="fichas.length === 0">
+            <tr *ngIf="fichasFiltradas.length === 0">
               <td colspan="4" class="px-6 py-8 text-center text-gray-500">
                 No hay fichas registradas
               </td>
@@ -245,8 +358,8 @@
       </div>
     </div>
 
-    <!-- Modal para Agregar/Editar Aprendiz -->
-    <div *ngIf="mostrarFormularioAprendiz"
+    <!-- Modal para Agregar/Editar Aprendiz - Solo INSTRUCTOR -->
+    <div *ngIf="mostrarFormularioAprendiz && esInstructor()"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         <div class="p-6">
@@ -274,7 +387,7 @@
               <select [(ngModel)]="aprendizFormulario.idFicha" name="fichaId" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                 <option value="">Seleccione una ficha</option>
-                <option *ngFor="let ficha of fichas" [value]="ficha.idFicha">
+                <option *ngFor="let ficha of  fichasActivas" [value]="ficha.idFicha">
                   {{ ficha.numeroFicha }} - {{ ficha.nombreFicha }}
                 </option>
               </select>
@@ -362,9 +475,8 @@
       </div>
     </div>
 
-    <!-- Modal para Importar Excel -->
-    <!-- Modal para Importar Excel -->
-    <div *ngIf="mostrarModalImportar"
+    <!-- Modal para Importar Excel - Solo INSTRUCTOR -->
+    <div *ngIf="mostrarModalImportar && esInstructor()"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full">
         <div class="p-6">
@@ -383,7 +495,7 @@
             <select [(ngModel)]="fichaParaImportar"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none cursor-pointer">
               <option value="0">Seleccione la ficha destino</option>
-              <option *ngFor="let ficha of fichas" [value]="ficha.idFicha">
+              <option *ngFor="let ficha of fichasActivas" [value]="ficha.idFicha">
                 {{ ficha.numeroFicha }} - {{ ficha.nombreFicha }}
               </option>
             </select>

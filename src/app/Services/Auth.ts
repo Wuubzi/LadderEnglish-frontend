@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/v1/auth'
+  private apiUrl = 'https://ladderenglish-backend.onrender.com/api/v1/auth'
   private localStorage = inject(LocalStorage);
   private http = inject(HttpClient);
 
